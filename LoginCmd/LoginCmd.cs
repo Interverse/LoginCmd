@@ -23,13 +23,13 @@ namespace LoginCmd {
         public override void Initialize() {
             ServerApi.Hooks.GameInitialize.Register(this, OnInitialize);
             Database.DBConnect();
-            PlayerHooks.PlayerPostLogin += OnPostLogin;
+            PlayerHooks.PlayerPostLogin += OnPostLoginAsync;
         }
 
         protected override void Dispose(bool Disposing) {
             if (Disposing) {
                 ServerApi.Hooks.GameInitialize.Deregister(this, OnInitialize);
-                PlayerHooks.PlayerPostLogin -= OnPostLogin;
+                PlayerHooks.PlayerPostLogin -= OnPostLoginAsync;
             }
             base.Dispose(Disposing);
         }
@@ -74,7 +74,8 @@ namespace LoginCmd {
             }
         }
 
-        private void OnPostLogin(PlayerPostLoginEventArgs e) {
+        private async void OnPostLoginAsync(PlayerPostLoginEventArgs e) {
+            await Task.Delay(500);
             Database.LoginCommands(e.Player);
         }
     }
